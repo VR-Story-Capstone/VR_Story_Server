@@ -19,5 +19,5 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('sentence/', include('sentence.urls')),
+    path('sentence/', include('sentence.urls')), #sentence에 관한 API를 처리하는 view로 라우팅
 ]
