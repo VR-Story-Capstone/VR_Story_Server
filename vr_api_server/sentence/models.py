@@ -25,6 +25,9 @@ class Sentence(models.Model):
     "created_at: time when create"
     created_at = models.DateTimeField(auto_now_add=True)
 
+    "mapName: the string the sentence will be used at."
+    mapName = models.CharField(max_length=64, default="")
+
     def __str__(self):
         return '{},{},{},{},{},{}'.format(\
             self.sentence_type, self.subject, self.complement, \

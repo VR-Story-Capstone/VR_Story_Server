@@ -8,6 +8,7 @@ class SentenceSerializer(serializers.ModelSerializer):
     object = serializers.CharField(allow_blank=True)
     modifier = serializers.CharField(allow_blank=True)
     predicate = serializers.CharField(allow_blank=True)
+    mapName = serializers.CharField(allow_blank=True)
 
     class Meta:
         model = Sentence
