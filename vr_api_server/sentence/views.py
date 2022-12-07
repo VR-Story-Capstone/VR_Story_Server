@@ -24,6 +24,11 @@ class SentenceView(APIView):
         # 모든 문장 리스트 불러옴
         sentence_queryset = Sentence.objects.all()
 
+        # id filtering 처리
+        id:str = request.GET.get('id',None)
+        if id is not None:
+            sentence_queryset = sentence_queryset.filter(id = id)
+
         # mapName filtering 처리
         mapName:str = request.GET.get('mapName',None)
         if mapName is not None:
@@ -39,8 +44,6 @@ class SentenceView(APIView):
             pageNum = int(pageNum)
             startIndex = min( (pageNum - 1) * pageSize , len(sentence_queryset))
             endIndex = min(pageNum * pageSize, len(sentence_queryset))
-            print(startIndex)
-            print(endIndex)
             sentence_queryset = sentence_queryset[startIndex:endIndex]
 
         sentence_queryset_serializer = SentenceSerializer(sentence_queryset, many = True)
@@ -72,3 +75,13 @@ class SentenceView(APIView):
             return Response(sentence_serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(sentence_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        # id filtering 처리
+        id:str = request.GET.get('id',None)
+        if id is not None:
+            model = Sentence.objects.get(id=int(id))
+            model.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response("id value required", status=status.HTTP_400_BAD_REQUEST)
