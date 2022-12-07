@@ -22,7 +22,16 @@ class SentenceView(APIView):
     """
     def get(self, request):
         # 모든 문장 리스트 불러옴
-        sentence_queryset = Sentence.objects.all() 
+        sentence_queryset = Sentence.objects.all()
+
+        # pagination 처리
+        pageSize:int = 5
+        pageNum = int(request.GET.get('pageNum',None))
+        if pageNum is not None:
+            startIndex = min( (pageNum - 1) * pageSize , len(sentence_queryset))
+            endIndex = max(pageNum * pageSize, len(sentence_queryset))
+            sentence_queryset = sentence_queryset[startIndex:endIndex]
+            
         sentence_queryset_serializer = SentenceSerializer(sentence_queryset, many = True)
         return Response(sentence_queryset_serializer.data, status=status.HTTP_200_OK)
 
