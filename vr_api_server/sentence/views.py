@@ -38,7 +38,9 @@ class SentenceView(APIView):
         if pageNum is not None:
             pageNum = int(pageNum)
             startIndex = min( (pageNum - 1) * pageSize , len(sentence_queryset))
-            endIndex = max(pageNum * pageSize, len(sentence_queryset))
+            endIndex = min(pageNum * pageSize, len(sentence_queryset))
+            print(startIndex)
+            print(endIndex)
             sentence_queryset = sentence_queryset[startIndex:endIndex]
 
         sentence_queryset_serializer = SentenceSerializer(sentence_queryset, many = True)
