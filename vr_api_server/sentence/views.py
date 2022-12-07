@@ -24,14 +24,23 @@ class SentenceView(APIView):
         # 모든 문장 리스트 불러옴
         sentence_queryset = Sentence.objects.all()
 
+        # mapName filtering 처리
+        mapName:str = request.GET.get('mapName',None)
+        if mapName is not None:
+            print(type(sentence_queryset))
+            sentence_queryset = sentence_queryset.filter(mapName = mapName)
+            
         # pagination 처리
+        # 리스트로 처리하기 때문에 맨 마지막에 적용할것
+        # django.db.models.query.QuerySet에서 list로 바뀜
         pageSize:int = 5
-        pageNum = int(request.GET.get('pageNum',None))
+        pageNum = request.GET.get('pageNum',None)
         if pageNum is not None:
+            pageNum = int(pageNum)
             startIndex = min( (pageNum - 1) * pageSize , len(sentence_queryset))
             endIndex = max(pageNum * pageSize, len(sentence_queryset))
             sentence_queryset = sentence_queryset[startIndex:endIndex]
-            
+
         sentence_queryset_serializer = SentenceSerializer(sentence_queryset, many = True)
         return Response(sentence_queryset_serializer.data, status=status.HTTP_200_OK)
 
